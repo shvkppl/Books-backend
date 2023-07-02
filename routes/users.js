@@ -11,6 +11,7 @@ const router = express.Router()
 router.post("/register", async (req, res) => {
     try {
         const { error } = validate(req.body)
+
         if (error) return res.status(400).send(error.details[0].message)
 
         const salt = await bcrypt.genSalt(Number(process.env.SALT))
@@ -32,11 +33,11 @@ router.post("/login", async (req, res) => {
             return res.status(400).send(error.details[0].message)
         }
 
-        const user = await User.findOne({ email: req.body.email })
+        const user = await User.findByPk( req.body.email)
         if (!user) {
             return res.status(400).send("email and password combination is incorrect")
         }
-
+        
         const isPwdValid = await bcrypt.compare(
             req.body.password,
             user.password
@@ -52,7 +53,7 @@ router.post("/login", async (req, res) => {
           
 
         jwt.sign(payload, JWTSECRET, {
-            expiresIn: 3600
+            expiresIn: 36000
         }, (err, token) => {
             if (err) throw err
             res.status(200).json({

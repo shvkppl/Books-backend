@@ -16,6 +16,7 @@ router.get('/:bookid', auth, async (req, res) => {
 })
 
 router.post('', auth, async (req, res) => {
+  console.log(JSON.stringify(req.body))
   await Book.create(req.body)
   res.status(201).send("201", req.body)
 })
@@ -33,7 +34,7 @@ router.put('/:bookid', auth, async (req, res) => {
   } catch {
     res.status(500).send("some error occured")
   }
-  
+
 })
 
 router.delete('/:bookid', auth, async (req, res) => {
